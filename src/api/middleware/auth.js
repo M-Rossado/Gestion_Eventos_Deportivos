@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Users = require("../models/user.model")
+const Events = require("../models/event.model")
 
 const checkToken = async (req, res, next) => {
     //Validar que el token es correcto

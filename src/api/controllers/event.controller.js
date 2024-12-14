@@ -1,5 +1,8 @@
 const Events = require('../models/event.model');
+const bcrypt = require('bcryptjs');
+const {createToken} =  require("../../utils/jwt")
 
+//Para añadir un nuevo Evento (Solo para usuarioa autenticados)
 const addEvent = async (req, res) => {
     try {
         const data = req.body;
@@ -12,6 +15,7 @@ const addEvent = async (req, res) => {
     }
 }; 
 
+//Para tener una lista de todos los eventos (cualquier usuario)
 const getEvents = async (req, res) => {
      try {
          const listEvent = await Events.find();
@@ -22,6 +26,23 @@ const getEvents = async (req, res) => {
      }
 };
 
+
+//TODO
+//Para tener los datos de un evento especifico a traves de su id (cualquier usuario)
+const getEventById= async (req, res) => {
+    try{
+        const {id} = req.params; 
+        const data = await Events.findById(id);
+        if (!data) {
+            return res.status(404).json({ message: 'Id no encontrado' });
+        }
+        return res.json(data);
+     }catch(error){
+         console.log(error);
+     }
+};
+
+//Para modificar un evento (Solo para usuarios autenticados)
 const updateEvent = async (req, res) => {
     const id = req.params.id;
     const event = req.body;
@@ -42,15 +63,6 @@ const deleteEvent = async (req, res) => {
     }
 };
 
-const getEventById= async (req, res) => {
-    try{
-        const id = req.body.name;
-        const data = await Events.find({id: idEvent});
-        return res.json(data);
-    }catch(error){
-        console.log(error);
-    }
-};
 
 const addUserToEvent= async (req, res) => {
     const idEvent = req.params.idE;

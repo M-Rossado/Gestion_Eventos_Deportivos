@@ -2,20 +2,6 @@ const Users = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const {createToken} =  require("../../utils/jwt")
 
-const addUser = async (req, res) => {
-    try {
-        const data = req.body;
-        console.log(data);
-
-        const newUser = new Users(data);
-
-        const createdUser = await newUser.save();
-        return res.json({message: 'Usuario creado', data: createdUser });
-    } catch (error){
-        console.log(error);
-    }
-};
-
 const getUserByName= async (req, res) => {
     try{
         const nameUser = req.body.username;
@@ -94,4 +80,4 @@ const getProfile = async (req, res) => {
     return res.json(dataUser);
 };
  
-module.exports = {addUser, getUserByName, deleteUser, register, login, getProfile};
+module.exports = {register, login, getUserByName, deleteUser, getProfile};
