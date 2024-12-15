@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const eventSchema = new Schema(
     {
-        eventname: {type:String},
-        // description: {type:String},
-        // date: {type:Date},
-        // location: {type:String},
-        // sporttype: {type:String, enum:["futbol", "baloncesto", "atletismo","tenis", "natacion", "otros"]},
+        eventname: {type:String, require:true, unique:true},
+        description: {type:String},
+        date: {type:Date},
+        location: {type:String},
+        sportType: {type:String, enum:["futbol", "baloncesto", "atletismo","tenis", "natacion", "otros"]},
         users: [{type: Schema.Types.ObjectId, ref: "users"}]
     },
     {

@@ -2,24 +2,6 @@ const Users = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const {createToken} =  require("../../utils/jwt")
 
-const getUserByName= async (req, res) => {
-    try{
-        const nameUser = req.body.username;
-        const data = await Users.find({username: nameUser});
-        return res.json(data);
-    }catch(error){
-        console.log(error);
-    }
-};
-
-const deleteUser = async (req, res) => {
-    try{
-        const deleteUser = await Users.findByIdAndDelete(req.params.id);
-        return res.json(deleteUser);
-    }catch(error){
-        console.log(error);
-    }
-};
 
 const register = async (req, res) => {
     try{
@@ -79,5 +61,5 @@ const getProfile = async (req, res) => {
     const dataUser = await Users.find({username: req.user.username});
     return res.json(dataUser);
 };
- 
-module.exports = {register, login, getUserByName, deleteUser, getProfile};
+
+module.exports = {register, login, getProfile};

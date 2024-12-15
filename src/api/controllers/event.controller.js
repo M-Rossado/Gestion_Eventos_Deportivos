@@ -2,7 +2,7 @@ const Events = require('../models/event.model');
 const bcrypt = require('bcryptjs');
 const {createToken} =  require("../../utils/jwt")
 
-//Para añadir un nuevo Evento (Solo para usuarioa autenticados)
+//Para añadir un nuevo Evento (Solo para usuarios autenticados)
 const addEvent = async (req, res) => {
     try {
         const data = req.body;
@@ -11,9 +11,9 @@ const addEvent = async (req, res) => {
         const createdEvent = await newEvent.save();
         return res.json({message: 'Evento creado', data: createdEvent });
     } catch (error){
-        console.log(error);
+        console.error(error);
     }
-}; 
+};
 
 //Para tener una lista de todos los eventos (cualquier usuario)
 const getEvents = async (req, res) => {
@@ -22,77 +22,69 @@ const getEvents = async (req, res) => {
          res.json({success: true, list: listEvent});
 
      } catch (error){
-         console.log(error);
+         console.error(error);
      }
 };
 
-
-//TODO
 //Para tener los datos de un evento especifico a traves de su id (cualquier usuario)
 const getEventById= async (req, res) => {
     try{
-        const {id} = req.params; 
+        const {id} = req.params;
         const data = await Events.findById(id);
         if (!data) {
-            return res.status(404).json({ message: 'Id no encontrado' });
+            return res.json({ message: 'Id no encontrado' });
         }
         return res.json(data);
      }catch(error){
-         console.log(error);
+         console.error(error);
      }
 };
 
 //Para modificar un evento (Solo para usuarios autenticados)
 const updateEvent = async (req, res) => {
-    const id = req.params.id;
-    const event = req.body;
-    try{
-        const newEvent = await Events.findByIdAndUpdate(id, curso,{new:true})
-        return res.json(newEvent);
-    }catch(error){
-        console.log(error);
+    try {
+        const { id } = req.params;
+        const data = req.body;
+
+        const updatedEvent = await Events.findByIdAndUpdate(id, data, { new: true });
+        return res.json({ message: 'Este evento deportivo ha sido actualizado', data: updatedEvent });
+    } catch (error) {
+        console.error(error);
     }
 };
 
+
+//TODO: comprobar porque no funciona con el token
+//Borrar un evento (Solo para usuarios autenticados)
 const deleteEvent = async (req, res) => {
     try{
         const deleteEvent = await Events.findByIdAndDelete(req.params.id);
         return res.json(deleteEvent);
     }catch(error){
-        console.log(error);
+        console.error(error);
     }
 };
 
 
-const addUserToEvent= async (req, res) => {
-    const idEvent = req.params.idE;
-    const idUser = req.params.idU;
-    const findEvent = await Events.findById(idEvent)
-    if (!findEvent){
-        return res.json({msg:"No existe este evento"})  
-    }
-    if (findEvent.users.includes(idUser)){
-        return res.json({msg: "El usuario ya existe"})
-    }
-    findEvent.users.push(idUser)
-
-    const newUser = await findEvent.save();
-
-    return res.json({msg: "Modificado con éxito", data: newUser})
-};
-
-
-//TODO: no funciona el endpoint getAllName
-const getAllName= async (req, res) => {
+//Para obtener todos los eventos filtrados por un tipo de deporte (cualquier usuario)
+const getBySport = async (req, res) => {
     try {
-        const nameEvent = req.body.eventname;
-        const data = await Events.find()({
-            eventname: { $regex: nameEvent, $options: "i" }
-        })
-        return res.json(data)
+        const { sportType } = req.query;
+
+        //Si no añades ningín deporte
+        if (!sportType) {
+            return res.status(400).json({ message: 'Debe añadir un tipo de deporte' });
+        }
+        const events = await Events.find({ sportType });
+        // Si no encuentra ningún evento con el tipo seleccionado
+        if (events.length === 0) {
+            return res.status(404).json({ message: 'No hay ningún evento registrado para este deporte' });
+        }
+        return res.json({ message: 'Estos son los eventos para este deporte:', data: events });
     } catch (error) {
-        console.log(error) 
+        console.error(error);
     }
 };
- 
-module.exports = {addEvent, getEvents, updateEvent, deleteEvent, getEventById, addUserToEvent, getAllName}; 
+
+
+module.exports = {addEvent, getEvents, updateEvent, deleteEvent, getEventById, getBySport};

@@ -3,22 +3,16 @@ const router = express.Router();
 
 
 const {auth, checkToken} = require('../../middleware/auth')
-const {addEvent, getEvents, updateEvent, deleteEvent, getEventById, addUserToEvent, getAllName} = require('../../controllers/event.controller');
+const {addEvent, getEvents, getEventById, updateEvent, deleteEvent, getBySport, orderByDate} = require('../../controllers/event.controller');
 
 
-
+router.post('/add', addEvent);  //con autenticación
 router.get('/listevents', getEvents);
 router.get('/getEventById/:id', getEventById);
-router.post('/add', checkToken, addEvent);  //con autenticación
-router.put('/update/:id', updateEvent);
-
-router.delete('/delete/:id', deleteEvent);
-
-
-router.put('/addUserToEvent/:idE/:idU', addUserToEvent);
-
-router.get('/getAllName', getAllName);
-
+router.put('/update/:id', checkToken, updateEvent);  //con autenticación
+router.delete('/delete/:id', checkToken, deleteEvent); //con autenticación
+//router.get('/orderByDate', orderByDate);
+router.get('/getBySport', getBySport);
 
 
 module.exports = router;
