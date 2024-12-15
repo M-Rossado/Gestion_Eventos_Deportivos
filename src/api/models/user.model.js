@@ -18,7 +18,7 @@ const userSchema = new Schema(
         timestamps: true, //esto creaba dos propiedades: cretedAt, updatedAt
     }
 );
-//Creo el modelo de datos
+//Creo el modelo de datos {}
 const Users = mongoose.model('users', userSchema);
 //lo exporto
 module.exports = Users;

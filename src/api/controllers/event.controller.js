@@ -9,7 +9,7 @@ const addEvent = async (req, res) => {
         const newEvent = new Events(data);
 
         const createdEvent = await newEvent.save();
-        return res.json({message: 'Evento creado', data: createdEvent });
+        return res.json({message: 'Evento creado con éxito', data: createdEvent });
     } catch (error){
         console.error(error);
     }
@@ -57,7 +57,7 @@ const updateEvent = async (req, res) => {
 const deleteEvent = async (req, res) => {
     try{
         const deleteEvent = await Events.findByIdAndDelete(req.params.id);
-        return res.json(deleteEvent);
+        return res.json({message: 'Evento eliminado con éxito', data: deleteEvent });
     }catch(error){
         console.error(error);
     }
