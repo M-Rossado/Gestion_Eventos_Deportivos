@@ -53,8 +53,6 @@ const updateEvent = async (req, res) => {
     }
 };
 
-
-//TODO: comprobar porque no funciona con el token
 //Borrar un evento (Solo para usuarios autenticados)
 const deleteEvent = async (req, res) => {
     try{
@@ -65,13 +63,22 @@ const deleteEvent = async (req, res) => {
     }
 };
 
+//Para obtener todos los eventos por orden de fecha (cualquier usuario)
+const orderByDate = async (req, res) => {
+    try {
+        const eventsByDate = await Events.find().sort({ date: 1 }); // Orden ascendente
+        return res.status(200).json({ message: 'Estos son los eventos por orden de fecha', data: eventsByDate })
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 //Para obtener todos los eventos filtrados por un tipo de deporte (cualquier usuario)
 const getBySport = async (req, res) => {
     try {
         const { sportType } = req.query;
 
-        //Si no añades ningín deporte
+        //Si no añades ningún deporte
         if (!sportType) {
             return res.status(400).json({ message: 'Debe añadir un tipo de deporte' });
         }
@@ -87,4 +94,6 @@ const getBySport = async (req, res) => {
 };
 
 
-module.exports = {addEvent, getEvents, updateEvent, deleteEvent, getEventById, getBySport};
+
+
+module.exports = {addEvent, getEvents, getEventById, updateEvent, deleteEvent, orderByDate, getBySport};
